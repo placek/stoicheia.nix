@@ -80,4 +80,64 @@ This is typically not the case when using standard Nix expressions. The error
 messages are context-related and provided rather in an evaluation backtrace
 style than a validation messaging.
 
+## How?
+
 See [example](./example).
+
+The `stoicheia.nix` mimics the home-manager configuration technique. It
+evaluates a builitin module that defines several options and composes it with
+the configuration module defined by user.
+
+Simplest usage is to define the configuration modue, as follows:
+
+```nix
+let
+  stoicheia = import (builtins.fetchGit { url = "https://github.com/placek/stoicheia.nix.git"; }) {
+    pkgs = import <nixpkgs> {};
+  };
+in
+stoicheia.mkProject {
+  config = {
+    name = "my-project";
+    version = "0.1.0";
+  };
+}
+```
+
+The `config` attribute is a NoxOS module. It can be an attribute set or the
+function:
+
+```nix
+let
+  stoicheia = import (builtins.fetchGit { url = "https://github.com/placek/stoicheia.nix.git"; }) {
+    pkgs = import <nixpkgs> {};
+  };
+in
+stoicheia.mkProject ({ lib, pkgs, ... }: {
+  name = "my-project";
+  version = lib.versions.pad 2 "0.1.0";
+  packages.ruby = pkgs.ruby;
+})
+```
+
+The `stoicheia.nix` argument can define include `modules`:
+
+```nix
+let
+  stoicheia = import (builtins.fetchGit { url = "https://github.com/placek/stoicheia.nix.git"; }) {
+    pkgs = import <nixpkgs> {};
+  };
+in
+stoicheia.mkProject ({ lib, pkgs, ... }: {
+  imports = [
+    ./shell.nix
+    ./modules/some-other-configuration
+  ];
+
+  conifg = {
+    name = "my-project";
+    version = lib.versions.pad 2 "0.1.0";
+    packages.ruby = pkgs.ruby;
+  };
+})
+```

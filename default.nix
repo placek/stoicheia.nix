@@ -1,13 +1,8 @@
 { pkgs ? import <nixpkgs> { }
-, lib ? import <nixpkgs/lib>
-, modules ? [ ]
-, config
 , ...
 }:
 let
-  mainModule = { config, lib, ... }: {
-    imports = modules;
-
+  stoicheiaModule = { config, lib, ... }: {
     options = with lib; {
       name = mkOption {
         type = types.str;
@@ -53,7 +48,9 @@ let
     };
   };
 in
-(lib.evalModules {
-  modules = [ mainModule config ];
-  specialArgs = { inherit pkgs lib; };
-}).config
+{
+  mkProject = configuration: pkgs.lib.evalModules {
+    modules = [ stoicheiaModule configuration ];
+    specialArgs = { inherit pkgs; inherit (pkgs) lib; };
+  };
+}

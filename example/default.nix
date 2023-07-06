@@ -1,16 +1,13 @@
 let
-  pkgs = import <nixpkgs> { };
-  stoicheia = import (builtins.fetchGit { url = "https://github.com/placek/stoicheia.nix.git"; });
+  stoicheia = import ../default.nix { pkgs = import <nixpkgs> { }; };
 in
-stoicheia {
-  inherit pkgs;
-
-  modules = [
+stoicheia.mkProject ({ config, pkgs, lib, ... }: {
+  imports = [
     ./modules/build # nix-build -A build.out
     ./modules/shell # nix-shell -A shell.out
   ];
 
-  config = { config, lib, ... }: {
+  config = {
     name = "nix-good-practices";
     version = lib.versions.pad 3 (builtins.readFile ./VERSION);
 
@@ -30,4 +27,4 @@ stoicheia {
 
     build.enabled = true;
   };
-}
+})
