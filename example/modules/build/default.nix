@@ -12,6 +12,7 @@
     installPhase = ''
       mkdir -p $out
       ${config.packages.ruby}/bin/ruby -e "puts '$name $version'" > $out/test
+      ${config.packages.ruby}/bin/ruby -e "puts '${builtins.toString (config.helpers.addTwo 7)}'" >> $out/test
       ${config.packages.ruby}/bin/ruby -v >> $out/test
     '';
   });

@@ -1,10 +1,10 @@
 let
   stoicheia = import ../default.nix { pkgs = import <nixpkgs> { }; };
 in
-stoicheia.mkProject ({ config, pkgs, lib, ... }: {
+(stoicheia.mkProject ({ config, pkgs, lib, ... }: {
   imports = [
-    ./modules/build # nix-build -A build.out
-    ./modules/shell # nix-shell -A shell.out
+    ./modules/build # nix-build -A targets.build
+    ./modules/shell # nix-shell -A targets.shell
   ];
 
   config = {
@@ -27,4 +27,4 @@ stoicheia.mkProject ({ config, pkgs, lib, ... }: {
 
     build.enabled = true;
   };
-})
+})).config

@@ -114,7 +114,7 @@ let
     pkgs = import <nixpkgs> {};
   };
 in
-stoicheia.mkProject ({ pkgs.lib, pkgs, ... }: {
+stoicheia.mkProject ({ lib, pkgs, ... }: {
   name = "my-project";
   version = lib.versions.pad 2 "0.1.0";
   packages.ruby = pkgs.ruby;
@@ -129,7 +129,7 @@ let
     pkgs = import <nixpkgs> {};
   };
 in
-stoicheia.mkProject ({ pkgs.lib, pkgs, ... }: {
+stoicheia.mkProject ({ lib, pkgs, ... }: {
   imports = [
     ./shell.nix
     ./modules/some-other-configuration
