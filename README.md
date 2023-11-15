@@ -34,7 +34,7 @@ on the piece of Nix code. It is always hard to maintain such comment-driven
 documentation.
 
 Some expressions are introduced into a configuration only because of specifics
-of Nix language itself. Evaluation of Nix expressions is strict and is verivied
+of Nix language itself. Evaluation of Nix expressions are strict and verified
 at execution time only. This means that in any project's configuration there
 will be strange helpers, or structures put there just to fulfill the Nix
 expression needs. Existance of such "helpers" normaly obfuscates the whole view
@@ -47,13 +47,13 @@ Thirdly, **Nix configuration drifts towards more and more nesting.**
 
 When evaluating the configuration developer expects to find the parts they are
 insterested in quickly and straightforward. Unfortunately, oftenly this is not
-the case. The configuration attached to typical project is deeply. This
-introduces additional complexity and makes the configuration les and less
+the case. The configuration attached to typical project is deep. This
+introduces additional complexity and makes the configuration less and less
 readable.
 
 To address that issue `stoicheia.nix` uses NixOS modules to flatten the
 configuration as mauch as it could. The idea is to keep up to 3 levels of
-nestation, to make is readable on evaluation.
+nesting, to make it readable on evaluation.
 
 On the other hand, **Nix configuration typically has no clear values shareing
 mechanism.**
@@ -88,7 +88,7 @@ The `stoicheia.nix` mimics the home-manager configuration technique. It
 evaluates a builitin module that defines several options and composes it with
 the configuration module defined by user.
 
-Simplest usage is to define the configuration modue, as follows:
+Simplest usage is to define the configuration module, as follows:
 
 ```nix
 let
@@ -100,11 +100,12 @@ stoicheia.mkProject {
   config = {
     name = "my-project";
     version = "0.1.0";
+    …
   };
 }
 ```
 
-The `config` attribute is a NoxOS module. It can be an attribute set or the
+The `config` attribute is a NixOS module. It can be an attribute set or the
 function:
 
 ```nix
@@ -113,7 +114,7 @@ let
     pkgs = import <nixpkgs> {};
   };
 in
-stoicheia.mkProject ({ lib, pkgs, ... }: {
+stoicheia.mkProject ({ pkgs.lib, pkgs, ... }: {
   name = "my-project";
   version = lib.versions.pad 2 "0.1.0";
   packages.ruby = pkgs.ruby;
@@ -128,7 +129,7 @@ let
     pkgs = import <nixpkgs> {};
   };
 in
-stoicheia.mkProject ({ lib, pkgs, ... }: {
+stoicheia.mkProject ({ pkgs.lib, pkgs, ... }: {
   imports = [
     ./shell.nix
     ./modules/some-other-configuration
